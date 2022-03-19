@@ -45,10 +45,14 @@ rtems_task T1(rtems_task_argument argument)
 	// TODO: Implement task's behaviour
 	rtems_task_wake_after(8);
 	consume_ticks(4);
+	PRINT_TIME("OBTAINING SEMAPHORE T1") ;
 	rtems_semaphore_obtain(critical_section_sem, RTEMS_WAIT, RTEMS_NO_TIMEOUT) ;
 	consume_ticks(3);
+	PRINT_TIME("RELEASING SEMAPHORE T1") ;
 	rtems_semaphore_release(critical_section_sem);
 	consume_ticks(2);
+	PRINT_TIME("FINISHING T1") ;
+
 
 	rtems_task_delete(RTEMS_SELF);
 }
@@ -59,7 +63,6 @@ rtems_task T2(rtems_task_argument argument)
 	// TODO: Implement task's behaviour
 	rtems_task_wake_after(12);
 	consume_ticks(7) ;
-
 	rtems_task_delete(RTEMS_SELF);
 }
 
@@ -68,11 +71,13 @@ rtems_task T3(rtems_task_argument argument)
 
 	// TODO: Implement task's behaviour
 	consume_ticks(0);
+	PRINT_TIME("OBTAINING SEMAPHORE T3") ;
 	rtems_semaphore_obtain(critical_section_sem, RTEMS_WAIT, RTEMS_NO_TIMEOUT) ;
 	consume_ticks(10);
+	PRINT_TIME("RELEASING SEMAPHORE T3") ;
 	rtems_semaphore_release(critical_section_sem);
 	consume_ticks(4);
-
+	PRINT_TIME("FINISHING SEMAPHORE T3") ;
 	rtems_task_delete(RTEMS_SELF);
 }
 
