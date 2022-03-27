@@ -13,14 +13,14 @@ RM := rm -rf
 -include objects.mk
 
 ifneq ($(MAKECMDGOALS),clean)
-ifneq ($(strip $(C_DEPS)),)
--include $(C_DEPS)
-endif
 ifneq ($(strip $(S_DEPS)),)
 -include $(S_DEPS)
 endif
 ifneq ($(strip $(S_UPPER_DEPS)),)
 -include $(S_UPPER_DEPS)
+endif
+ifneq ($(strip $(C_DEPS)),)
+-include $(C_DEPS)
 endif
 endif
 
@@ -29,19 +29,19 @@ endif
 # Add inputs and outputs from these tool invocations to the build variables 
 
 # All Target
-all: semaphores_nested_rtems_solved
+all: semaphores_nested_rtems
 
 # Tool invocations
-semaphores_nested_rtems_solved: $(OBJS) $(USER_OBJS)
+semaphores_nested_rtems: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: SPARC RTEMS C Linker'
-	sparc-rtems-gcc -msoft-float -o "semaphores_nested_rtems_solved" $(OBJS) $(USER_OBJS) $(LIBS)
+	sparc-rtems-gcc -msoft-float -o "semaphores_nested_rtems" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) $(OBJS)$(C_DEPS)$(S_DEPS)$(S_UPPER_DEPS) semaphores_nested_rtems_solved
+	-$(RM) $(OBJS)$(S_DEPS)$(S_UPPER_DEPS)$(C_DEPS) semaphores_nested_rtems
 	-@echo ' '
 
 .PHONY: all clean dependents

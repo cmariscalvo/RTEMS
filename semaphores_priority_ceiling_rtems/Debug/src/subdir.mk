@@ -20,7 +20,7 @@ C_DEPS += \
 src/%.o: ../src/%.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: SPARC RTEMS C Compiler'
-	sparc-rtems-gcc -I/opt/rtems-4.8/sparc-rtems/leon3/lib/include -I"/home/parraman/workspace_rtems/semaphores_blocking_rtems_solved/include" -O0 -g3 -Wall -msoft-float -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
+	sparc-rtems-gcc -I/opt/rtems-4.8/sparc-rtems/leon3/lib/include -I"/home/atcsol/workspace/rtems_sctre/semaphores_priority_ceiling_rtems/include" -O0 -g3 -Wall -msoft-float -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 

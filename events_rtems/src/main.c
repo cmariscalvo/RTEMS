@@ -66,6 +66,28 @@ rtems_task logging_server(rtems_task_argument argument)
 	{
 
 		// TODO: Wait for any of the events defined
+		//	ESPERA BLOQUEANTE HASTA QUE LLEGUE ALGUN EVENTO
+		rtems_event_receive(EVENT_ACS_START | EVENT_ACS_END | EVENT_HK_START | EVENT_HK_END,
+				RTEMS_WAIT|RTEMS_EVENT_ANY, RTEMS_NO_TIMEOUT, &event_out ) ;
+
+		//VERDADERO CUANTO EVENT_OUT TIENE 1 EN LA MISMA POSICION QUE HOUSE_KEEPING START
+		if (event_out & EVENT_HK_START){
+			PRINT_TIME("EVENT_HK_START");
+
+		} ;
+		if (event_out & EVENT_HK_END){
+
+			PRINT_TIME("EVENT_HK_END");
+		} ;
+
+		if (event_out & EVENT_ACS_START){
+					PRINT_TIME("EVENT_ACS_START");
+
+				} ;
+		if (event_out & EVENT_ACS_END){
+
+					PRINT_TIME("EVENT_ACS_END");
+				} ;
 
 		// TODO: When an event takes place, print time and event type
 
@@ -88,12 +110,13 @@ rtems_task housekeeping_task(rtems_task_argument argument)
 	for (;;)
 	{
 		// TODO: Signal the event EVENT_HK_START
-
+		rtems_event_send(logging_server_id, EVENT_HK_START);
 		// TODO: Simulate processing
-
+		consume_ticks(2);
 		// TODO: Signal the event EVENT_HK_END
-
+		rtems_event_send(logging_server_id, EVENT_HK_END) ;
 		// TODO: Wait until next execution
+		rtems_task_wake_after(10);
 
 	}
 }
@@ -113,12 +136,16 @@ rtems_task acs_task(rtems_task_argument argument)
 	for (;;)
 	{
 		// TODO: Signal the event EVENT_ACS_START
+		rtems_event_send(logging_server_id, EVENT_ACS_START);
 
 		// TODO: Simulate processing
+		consume_ticks(40);
 
 		// TODO: Signal the event EVENT_ACS_END
+		rtems_event_send(logging_server_id, EVENT_ACS_END);
 
 		// TODO: Wait until next execution
+		rtems_task_wake_after(100);
 
 	}
 }
@@ -126,18 +153,32 @@ rtems_task acs_task(rtems_task_argument argument)
 
 rtems_task Init(rtems_task_argument arg)
 {
-
 	// TODO: Create Logging Server
+		rtems_task_create(rtems_build_name('T', 'S', 'K', '1'),
+		10, RTEMS_MINIMUM_STACK_SIZE,
+		RTEMS_PREEMPT | RTEMS_NO_TIMESLICE,
+		RTEMS_DEFAULT_ATTRIBUTES, &logging_server_id);
 
 	// TODO: Start Logging Server
+		rtems_task_start(logging_server_id, logging_server, 0);
 
 	// TODO: Create Housekeeping task
+		rtems_task_create(rtems_build_name('T', 'S', 'K', '2'),
+		10, RTEMS_MINIMUM_STACK_SIZE,
+		RTEMS_PREEMPT | RTEMS_NO_TIMESLICE,
+		RTEMS_DEFAULT_ATTRIBUTES, &housekeeping_task_id);
 
 	// TODO: Start Housekeeping task
+		rtems_task_start(housekeeping_task_id, housekeeping_task, 0);
 
 	// TODO: Create ACS task
+		rtems_task_create(rtems_build_name('T', 'S', 'K', '3'),
+		10, RTEMS_MINIMUM_STACK_SIZE,
+		RTEMS_PREEMPT | RTEMS_NO_TIMESLICE,
+		RTEMS_DEFAULT_ATTRIBUTES, &acs_task_id);
 
 	// TODO: Start ACS task
+		rtems_task_start(acs_task_id, acs_task, 0);
 
 	/** Delete the initial task from the system */
 	rtems_task_delete(RTEMS_SELF);

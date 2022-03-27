@@ -44,20 +44,57 @@ rtems_task T1(rtems_task_argument argument)
 {
 	// TODO: Implement task's behaviour
 
+	rtems_task_wake_after(12);
+	PRINT_TIME("STARTING T1") ;
+	consume_ticks(4);
+	PRINT_TIME("TRYING TO GET SEMAPHORE 1 T1") ;
+	rtems_semaphore_obtain(critical_section_ONE_sem, RTEMS_WAIT, RTEMS_NO_TIMEOUT) ;
+	PRINT_TIME("GOT SEMAPHORE 1 T1") ;
+	consume_ticks(3);
+	PRINT_TIME("RELEASING SEMAPHORE 1 T1") ;
+	rtems_semaphore_release(critical_section_ONE_sem);
+	consume_ticks(2);
+	PRINT_TIME("TRYING TO GET SEMAPHORE 2 T1") ;
+	rtems_semaphore_obtain(critical_section_TWO_sem, RTEMS_WAIT, RTEMS_NO_TIMEOUT) ;
+	PRINT_TIME("GOT SEMAPHORE 2 T1") ;
+	consume_ticks(2) ;
+	PRINT_TIME("RELEASING SEMAPHORE 2 T1") ;
+	rtems_semaphore_release(critical_section_TWO_sem);
+	consume_ticks(2);
+	PRINT_TIME("Finishing T1") ;
 	rtems_task_delete(RTEMS_SELF);
 }
 
 rtems_task T2(rtems_task_argument argument)
 {
 	// TODO: Implement task's behaviour
-
+	rtems_task_wake_after(8);
+	PRINT_TIME("STARTING T2") ;
+	consume_ticks(2);
+	PRINT_TIME("TRYING TO GET SEMAPHORE 2 T2") ;
+	rtems_semaphore_obtain(critical_section_TWO_sem, RTEMS_WAIT, RTEMS_NO_TIMEOUT) ;
+	PRINT_TIME("GOT SEMAPHORE 2 T2") ;
+	consume_ticks(4);
+	PRINT_TIME("RELEASING SEMAPHORE 2 T2") ;
+	rtems_semaphore_release(critical_section_TWO_sem);
+	consume_ticks(3);
+	PRINT_TIME("FINISHING_T2") ;
 	rtems_task_delete(RTEMS_SELF);
 }
 
 rtems_task T3(rtems_task_argument argument)
 {
 	// TODO: Implement task's behaviour
-
+	PRINT_TIME("STARTING T3") ;
+	consume_ticks(6);
+	PRINT_TIME("TRYING TO GET SEMAPHORE 1 T3") ;
+	rtems_semaphore_obtain(critical_section_ONE_sem, RTEMS_WAIT, RTEMS_NO_TIMEOUT) ;
+	PRINT_TIME("GOT SEMAPHORE 1 T3") ;
+	consume_ticks(6);
+	PRINT_TIME("RELEASING SEMAPHORE 1 T3") ;
+	rtems_semaphore_release(critical_section_ONE_sem);
+    consume_ticks(2);
+	PRINT_TIME("FINISHING_T3") ;
 	rtems_task_delete(RTEMS_SELF);
 }
 
@@ -69,6 +106,11 @@ rtems_task Init(rtems_task_argument arg)
 	rtems_id T3_id;
 
 	// TODO: Create the semaphores
+	rtems_semaphore_create(rtems_build_name('s', 'e', 'm', '1'), 1,
+			RTEMS_PRIORITY | RTEMS_BINARY_SEMAPHORE | RTEMS_INHERIT_PRIORITY, 10, &critical_section_ONE_sem) ;
+	rtems_semaphore_create(rtems_build_name('s', 'e', 'm', '2'), 1,
+				RTEMS_PRIORITY | RTEMS_BINARY_SEMAPHORE | RTEMS_INHERIT_PRIORITY, 10, &critical_section_TWO_sem) ;
+
 
 	// Create T1
 	rtems_task_create(rtems_build_name('T', 'M', 'S', 'V'),

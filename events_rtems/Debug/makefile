@@ -29,19 +29,19 @@ endif
 # Add inputs and outputs from these tool invocations to the build variables 
 
 # All Target
-all: events_rtems_solved
+all: events_rtems
 
 # Tool invocations
-events_rtems_solved: $(OBJS) $(USER_OBJS)
+events_rtems: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: SPARC RTEMS C Linker'
-	sparc-rtems-gcc -msoft-float -o "events_rtems_solved" $(OBJS) $(USER_OBJS) $(LIBS)
+	sparc-rtems-gcc -msoft-float -o "events_rtems" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) $(OBJS)$(S_DEPS)$(S_UPPER_DEPS)$(C_DEPS) events_rtems_solved
+	-$(RM) $(OBJS)$(S_DEPS)$(S_UPPER_DEPS)$(C_DEPS) events_rtems
 	-@echo ' '
 
 .PHONY: all clean dependents

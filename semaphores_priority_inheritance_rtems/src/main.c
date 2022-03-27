@@ -42,13 +42,32 @@ rtems_task T1(rtems_task_argument argument)
 {
 
 	// TODO: Implement task's behaviour
+	rtems_task_wake_after(8);
+	PRINT_TIME("STARTING T1") ;
+	consume_ticks(4);
+	PRINT_TIME("TRYING TO GET SEMAPHORE T1") ;
+	rtems_semaphore_obtain(critical_section_sem, RTEMS_WAIT, RTEMS_NO_TIMEOUT) ;
+	PRINT_TIME("GOT SEMAPHORE T1") ;
+	consume_ticks(3);
+	PRINT_TIME("RELEASING SEMAPHORE T1") ;
+
+	rtems_semaphore_release(critical_section_sem);
+
+	consume_ticks(2);
+
+	PRINT_TIME("FINISHING T1") ;
 
 	rtems_task_delete(RTEMS_SELF);
+
 }
 
 rtems_task T2(rtems_task_argument argument)
 {
 	// TODO: Implement task's behaviour
+	rtems_task_wake_after(15);
+	PRINT_TIME("STARTING T2") ;
+	consume_ticks(7) ;
+	PRINT_TIME("FINISHING T2") ;
 
 	rtems_task_delete(RTEMS_SELF);
 }
@@ -57,7 +76,20 @@ rtems_task T3(rtems_task_argument argument)
 {
 	// TODO: Implement task's behaviour
 
+	PRINT_TIME("STARTING T3");
+	consume_ticks(6);
+	PRINT_TIME("TRYING TO GET SEMAPHORE T3") ;
+	rtems_semaphore_obtain(critical_section_sem, RTEMS_WAIT, RTEMS_NO_TIMEOUT) ;
+	PRINT_TIME("GOT SEMAPHORE T3") ;
+	consume_ticks(10);
+	PRINT_TIME("RELEASING SEMAPHORE T3") ;
+
+	rtems_semaphore_release(critical_section_sem);
+	consume_ticks(4);
+	PRINT_TIME("FINISHING  T3") ;
+
 	rtems_task_delete(RTEMS_SELF);
+
 }
 
 
@@ -68,6 +100,8 @@ rtems_task Init(rtems_task_argument arg)
 	rtems_id T3_id;
 
 	// TODO: Create the semaphore
+	rtems_semaphore_create(rtems_build_name('s', 'e', 'm', '1'), 1,
+			RTEMS_PRIORITY | RTEMS_BINARY_SEMAPHORE | RTEMS_INHERIT_PRIORITY, 0, &critical_section_sem) ;
 
 	// Create T1
 	rtems_task_create(rtems_build_name('T', 'M', 'S', 'V'),

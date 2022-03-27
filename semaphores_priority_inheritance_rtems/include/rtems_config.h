@@ -36,6 +36,7 @@ rtems_task Init(rtems_task_argument arg);
 #define CONFIGURE_TICKS_PER_TIMESLICE (50)
 
 // TODO: Define maximum number of semaphores */
+#define MAXIMUM_SEMAPHORES (1)
 
 /** Maximum number of tasks */
 #define CONFIGURE_MAXIMUM_TASKS      (4)
