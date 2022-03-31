@@ -79,6 +79,7 @@ rtems_task telemetry_server(rtems_task_argument argument)
 	for (;;)
 	{
 		// TODO: Wait for a message
+		rtems_message_queue_receive(tm_message_queue, &tm, &size, RTEMS_WAIT, RTEMS_NO_TIMEOUT) ;
 
 		// TODO: Simulate processing
 
@@ -87,6 +88,7 @@ rtems_task telemetry_server(rtems_task_argument argument)
 				"HK" : "ACS"),
 				tm.data_size,
 				tm.data);
+		consume_ticks(1);
 
 	}
 }
@@ -110,6 +112,7 @@ rtems_task housekeeping_task(rtems_task_argument argument)
 	for (;;)
 	{
 		PRINT_TIME("HK Activation");
+		consume_ticks(2) ;
 
 		// TODO: Simulate processing
 
@@ -119,8 +122,10 @@ rtems_task housekeeping_task(rtems_task_argument argument)
 		tm.counter++;
 
 		// TODO: Send the message
+		rtems_message_queue_send(tm_message_queue, &tm, sizeof(tm)) ;
 
 		// TODO: Wait until next execution
+		rtems_task_wake_after(10) ;
 
 	}
 }
@@ -145,6 +150,7 @@ rtems_task acs_task(rtems_task_argument argument)
 		PRINT_TIME("ACS Activation");
 
 		// TODO: Simulate processing
+		consume_ticks(40);
 
 		// Fill the telemetry packet
 		strcpy(tm.data, "ACS OK");
@@ -152,7 +158,9 @@ rtems_task acs_task(rtems_task_argument argument)
 		tm.counter++;
 
 		// TODO: Send the message
+		rtems_message_queue_send(tm_message_queue, &tm, sizeof(tm)) ;
 
+		rtems_task_wake_after(100) ;
 		// TODO: Wait until next execution
 
 	}
@@ -163,16 +171,37 @@ rtems_task Init(rtems_task_argument arg)
 {
 
 	// TODO: Create the message queue
+	rtems_message_queue_create(rtems_build_name('A', 'B', 'C', 'D'), 128, 64, RTEMS_FIFO, &tm_message_queue) ;
 
 	// TODO: Create Telemetry Server
+	rtems_task_create(rtems_build_name('T', 'S', 'K', '1'),
+			10, RTEMS_MINIMUM_STACK_SIZE,
+			RTEMS_PREEMPT | RTEMS_NO_TIMESLICE,
+			RTEMS_DEFAULT_ATTRIBUTES, &telemetry_server_id);
 
+		// TODO: Start Logging Server
+	rtems_task_start(telemetry_server_id, telemetry_server, 0);
 	// TODO: Start Telemetry Server
 
 	// TODO: Create Housekeeping task
+	rtems_task_create(rtems_build_name('T', 'S', 'K', '2'),
+				10, RTEMS_MINIMUM_STACK_SIZE,
+				RTEMS_PREEMPT | RTEMS_NO_TIMESLICE,
+				RTEMS_DEFAULT_ATTRIBUTES, &housekeeping_task_id);
+
+			// TODO: Start Logging Server
+	rtems_task_start(housekeeping_task_id, housekeeping_task, 0);
 
 	// TODO: Start Housekeeping task
 
 	// TODO: Create ACS task
+	rtems_task_create(rtems_build_name('T', 'S', 'K', '3'),
+					10, RTEMS_MINIMUM_STACK_SIZE,
+					RTEMS_PREEMPT | RTEMS_NO_TIMESLICE,
+					RTEMS_DEFAULT_ATTRIBUTES, &acs_task_id);
+
+				// TODO: Start Logging Server
+	rtems_task_start(acs_task_id, acs_task, 0);
 
 	// TODO: Start ACS task
 

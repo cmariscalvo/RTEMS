@@ -39,9 +39,11 @@ rtems_task Init(rtems_task_argument arg);
 #define CONFIGURE_MAXIMUM_SEMAPHORES (0)
 
 // TODO: Define maximum number of tasks
+#define CONFIGURE_MAXIMUM_TASKS (4)
+
 
 // TODO: Define maximum number of message queues
-
+#define CONFIGURE_MAXIMUM_MESSAGE_QUEUES (1)
 /**
  * Extra stack memory needed for the tasks. It must include all the memory
  * of the different tasks that exceeds of 4KiB per task.
