@@ -1,0 +1,6 @@
+20:33:04 **** Incremental Build of configuration Debug for project error_management_rtems ****
+make all 
+make: No se hace nada para 'all'.
+
+20:33:04 Build Finished (took 214ms)
+

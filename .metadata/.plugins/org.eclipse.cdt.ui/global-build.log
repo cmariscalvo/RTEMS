@@ -1,0 +1,22 @@
+20:30:43 **** Clean-only build of configuration Debug for project error_management_rtems ****
+make clean 
+rm -rf  ./src/main.o  ./src/main.d  error_management_rtems
+ 
+20:30:44 **** Build of configuration Debug for project error_management_rtems ****
+make all 
+Building file: ../src/main.c
+Invoking: SPARC RTEMS C Compiler
+sparc-rtems-gcc -I/opt/rtems-4.8/sparc-rtems/leon3/lib/include -I"/home/atcsol/workspace/rtems_sctre/error_management_rtems/include" -O0 -g3 -Wall -msoft-float -c -fmessage-length=0 -MMD -MP -MF"src/main.d" -MT"src/main.d" -o "src/main.o" "../src/main.c"
+Finished building: ../src/main.c
+ 
+Building target: error_management_rtems
+Invoking: SPARC RTEMS C Linker
+sparc-rtems-gcc -msoft-float -o "error_management_rtems"  ./src/main.o   
+Finished building target: error_management_rtems
+ 
+20:31:40 **** Incremental Build of configuration Debug for project error_management_rtems ****
+make all 
+make: No se hace nada para 'all'.
+20:33:04 **** Incremental Build of configuration Debug for project error_management_rtems ****
+make all 
+make: No se hace nada para 'all'.

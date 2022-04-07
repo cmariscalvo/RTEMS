@@ -17,7 +17,7 @@ C_DEPS += \
 src/%.o: ../src/%.c
 	@echo 'Building file: $<'
 	@echo 'Invoking: SPARC RTEMS C Compiler'
-	sparc-rtems-gcc -I/opt/rtems-4.8/sparc-rtems/leon3/lib/include -I"/home/parraman/workspace-kepler/error_management_rtems/include" -O0 -g3 -Wall -msoft-float -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
+	sparc-rtems-gcc -I/opt/rtems-4.8/sparc-rtems/leon3/lib/include -I"/home/atcsol/workspace/rtems_sctre/error_management_rtems/include" -O0 -g3 -Wall -msoft-float -c -fmessage-length=0 -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
 	@echo 'Finished building: $<'
 	@echo ' '
 
